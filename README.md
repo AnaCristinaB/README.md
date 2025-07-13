@@ -58,18 +58,3 @@ Eliminar Nota: Borrar notas de la lista.
 Persistencia de Datos:
 
 Guardar automáticamente las tareas y notas en el localStorage del navegador para que la información permanezca disponible incluso después de cerrar la aplicación o el navegador.
-
-6. Diseño (Wireframes / Esquemas de Página)
-A continuación, se presentan bocetos básicos que ilustran la disposición y los elementos clave de las pantallas principales de Mi Espacio Organizado. Estos wireframes son conceptuales y servirán como guía inicial para el desarrollo de la interfaz.
-
-Instrucción para las imágenes en Markdown:
-Para insertar una imagen, usa esta sintaxis: ![Descripción de la imagen](ruta/a/tu/imagen.png). Asegúrate de que las imágenes estén en tu repositorio de GitHub (por ejemplo, en una carpeta assets/images/).
-
-6.1. Pantalla Principal (Dashboard)
-(Este wireframe muestra una vista dividida: a la izquierda, una lista de tareas pendientes con casillas de verificación y un campo para añadir nuevas; a la derecha, un área para notas rápidas con un botón para añadir una nueva nota.)
-
-6.2. Pantalla de Tareas
-(Este esquema se enfoca en la lista de tareas, mostrando el título de la tarea, una casilla para marcar como completada y un icono para eliminar. En la parte superior, un campo para añadir nuevas tareas.)
-
-6.3. Pantalla de Notas
-(Este wireframe presenta una lista de notas, donde cada nota tiene un título (o las primeras palabras) y un icono para editar o eliminar. En la parte superior, un campo de texto grande para añadir una nueva nota.)
