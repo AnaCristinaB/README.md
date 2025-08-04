@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Espacio Organizado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #6b8cbc;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .dashboard {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-header h2 {
+            font-size: 1.4rem;
+        }
+        
+        .dashboard-content {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 400px;
+        }
+        
+        .tasks-section, .notes-section {
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .tasks-section {
+            border-right: 1px solid #eee;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .add-form {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        .add-form input, .add-form textarea {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .add-form input:focus, .add-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+        }
+        
+        .add-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--primary);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent);
+        }
+        
+        .task-list, .note-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .task-item, .note-item {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            transition: var(--transition);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .task-item:hover, .note-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        .task-item.completed {
+            background-color: #e8f5e9;
+            border-left: 4px solid var(--success);
+        }
+        
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: #777;
+        }
+        
+        .task-check {
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+        
+        .task-content, .note-content {
+            flex: 1;
+        }
+        
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+        
+        .task-description {
+            color: #666;
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+        
+        .note-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+        
+        .task-actions, .note-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 10px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+        
+        .view-switcher {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        .view-btn {
+            padding: 12px 25px;
+            background-color: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .view-btn.active, .view-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            flex: 1;
+            padding: 10px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-content {
+                flex-direction: column;
+            }
+            
+            .tasks-section {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--secondary);
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <h1>Mi Espacio Organizado</h1>
+            <p class="subtitle">Tu herramienta minimalista para gestionar tareas diarias y capturar notas rápidas en un solo lugar.</p>
+        </header>
+        
+        <div class="view-switcher">
+            <button class="view-btn active" id="dashboardBtn">Dashboard</button>
+            <button class="view-btn" id="tasksBtn">Tareas</button>
+            <button class="view-btn" id="notesBtn">Notas</button>
+        </div>
+        
+        <div class="app-container">
+            <!-- Dashboard View -->
+            <div class="dashboard" id="dashboardView">
+                <div class="dashboard-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Panel Principal</h2>
+                    <div id="dateDisplay"></div>
+                </div>
+                <div class="dashboard-content">
+                    <div class="tasks-section">
+                        <div class="section-title">
+                            <i class="fas fa-tasks"></i>
+                            <h3>Tareas Pendientes</h3>
+                        </div>
+                        
+                        <div class="add-form">
+                            <input type="text" id="taskInput" placeholder="Añadir nueva tarea...">
+                            <button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> Añadir</button>
+                        </div>
+                        
+                        <ul class="task-list" id="taskList">
+                            <!-- Tasks will be dynamically added here -->
+                        </ul>
+                    </div>
+                    
+                    <div class="notes-section">
+                        <div class="section-title">
+                            <i class="fas fa-sticky-note"></i>
+                            <h3>Notas Rápidas</h3>
+                        </div>
+                        
+                        <div class="add-form">
+                            <textarea id="noteInput" placeholder="Escribe una nueva nota..."></textarea>
+                            <button class="btn" id="addNoteBtn"><i class="fas fa-plus"></i> Añadir</button>
+                        </div>
+                        
+                        <ul class="note-list" id="noteList">
+                            <!-- Notes will be dynamically added here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tasks View -->
+            <div class="dashboard hidden" id="tasksView">
+                <div class="dashboard-header">
+                    <h2><i class="fas fa-tasks"></i> Gestión de Tareas</h2>
+                </div>
+                <div class="dashboard-content">
+                    <div class="tasks-section" style="border: none; width: 100%;">
+                        <div class="section-title">
+                            <i class="fas fa-tasks"></i>
+                            <h3>Todas las Tareas</h3>
+                        </div>
+                        
+                        <div class="add-form">
+                            <input type="text" id="taskInputFull" placeholder="Añadir nueva tarea...">
+                            <button class="btn" id="addTaskBtnFull"><i class="fas fa-plus"></i> Añadir</button>
+                        </div>
+                        
+                        <ul class="task-list" id="fullTaskList">
+                            <!-- All tasks will be dynamically added here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notes View -->
+            <div class="dashboard hidden" id="notesView">
+                <div class="dashboard-header">
+                    <h2><i class="fas fa-sticky-note"></i> Gestión de Notas</h2>
+                </div>
+                <div class="dashboard-content">
+                    <div class="notes-section" style="border: none; width: 100%;">
+                        <div class="section-title">
+                            <i class="fas fa-sticky-note"></i>
+                            <h3>Todas las Notas</h3>
+                        </div>
+                        
+                        <div class="add-form">
+                            <textarea id="noteInputFull" placeholder="Escribe una nueva nota..."></textarea>
+                            <button class="btn" id="addNoteBtnFull"><i class="fas fa-plus"></i> Añadir</button>
+                        </div>
+                        
+                        <ul class="note-list" id="fullNoteList">
+                            <!-- All notes will be dynamically added here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalTasks">0</div>
+                <div class="stat-label">Tareas Totales</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="pendingTasks">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="completedTasks">0</div>
+                <div class="stat-label">Completadas</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalNotes">0</div>
+                <div class="stat-label">Notas</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Mi Espacio Organizado &copy; 2023 - Una herramienta minimalista para aumentar tu productividad</p>
+            <p>Los datos se almacenan localmente en tu navegador usando localStorage</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const dashboardView = document.getElementById('dashboardView');
+        const tasksView = document.getElementById('tasksView');
+        const notesView = document.getElementById('notesView');
+        const dashboardBtn = document.getElementById('dashboardBtn');
+        const tasksBtn = document.getElementById('tasksBtn');
+        const notesBtn = document.getElementById('notesBtn');
+        const dateDisplay = document.getElementById('dateDisplay');
+        
+        // Data structure
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current date
+            const now = new Date();
+            dateDisplay.textContent = now.toLocaleDateString('es-ES', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            // Load data
+            renderTasks();
+            renderNotes();
+            updateStats();
+            
+            // Event listeners for view switching
+            dashboardBtn.addEventListener('click', () => switchView('dashboard'));
+            tasksBtn.addEventListener('click', () => switchView('tasks'));
+            notesBtn.addEventListener('click', () => switchView('notes'));
+            
+            // Task event listeners
+            document.getElementById('addTaskBtn').addEventListener('click', addTask);
+            document.getElementById('taskInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addTask();
+            });
+            
+            document.getElementById('addTaskBtnFull').addEventListener('click', addTaskFromFull);
+            document.getElementById('taskInputFull').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addTaskFromFull();
+            });
+            
+            // Note event listeners
+            document.getElementById('addNoteBtn').addEventListener('click', addNote);
+            document.getElementById('addNoteBtnFull').addEventListener('click', addNoteFromFull);
+        });
+        
+        // Switch between views
+        function switchView(view) {
+            dashboardView.classList.add('hidden');
+            tasksView.classList.add('hidden');
+            notesView.classList.add('hidden');
+            
+            dashboardBtn.classList.remove('active');
+            tasksBtn.classList.remove('active');
+            notesBtn.classList.remove('active');
+            
+            if (view === 'dashboard') {
+                dashboardView.classList.remove('hidden');
+                dashboardBtn.classList.add('active');
+            } else if (view === 'tasks') {
+                tasksView.classList.remove('hidden');
+                tasksBtn.classList.add('active');
+            } else if (view === 'notes') {
+                notesView.classList.remove('hidden');
+                notesBtn.classList.add('active');
+            }
+        }
+        
+        // Add task from dashboard
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const title = taskInput.value.trim();
+            
+            if (title) {
+                const newTask = {
+                    id: Date.now(),
+                    title: title,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                
+                tasks.push(newTask);
+                saveTasks();
+                renderTasks();
+                updateStats();
+                taskInput.value = '';
+            }
+        }
+        
+        // Add task from tasks view
+        function addTaskFromFull() {
+            const taskInput = document.getElementById('taskInputFull');
+            const title = taskInput.value.trim();
+            
+            if (title) {
+                const newTask = {
+                    id: Date.now(),
+                    title: title,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                
+                tasks.push(newTask);
+                saveTasks();
+                renderTasks();
+                updateStats();
+                taskInput.value = '';
+            }
+        }
+        
+        // Add note from dashboard
+        function addNote() {
+            const noteInput = document.getElementById('noteInput');
+            const content = noteInput.value.trim();
+            
+            if (content) {
+                const newNote = {
+                    id: Date.now(),
+                    content: content,
+                    createdAt: new Date().toISOString()
+                };
+                
+                notes.push(newNote);
+                saveNotes();
+                renderNotes();
+                updateStats();
+                noteInput.value = '';
+            }
+        }
+        
+        // Add note from notes view
+        function addNoteFromFull() {
+            const noteInput = document.getElementById('noteInputFull');
+            const content = noteInput.value.trim();
+            
+            if (content) {
+                const newNote = {
+                    id: Date.now(),
+                    content: content,
+                    createdAt: new Date().toISOString()
+                };
+                
+                notes.push(newNote);
+                saveNotes();
+                renderNotes();
+                updateStats();
+                noteInput.value = '';
+            }
+        }
+        
+        // Toggle task completion
+        function toggleTaskCompletion(id) {
+            tasks = tasks.map(task => {
+                if (task.id === id) {
+                    return { ...task, completed: !task.completed };
+                }
+                return task;
+            });
+            
+            saveTasks();
+            renderTasks();
+            updateStats();
+        }
+        
+        // Delete task
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveTasks();
+            renderTasks();
+            updateStats();
+        }
+        
+        // Delete note
+        function deleteNote(id) {
+            notes = notes.filter(note => note.id !== id);
+            saveNotes();
+            renderNotes();
+            updateStats();
+        }
+        
+        // Save tasks to localStorage
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+        
+        // Save notes to localStorage
+        function saveNotes() {
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
+        
+        // Render tasks
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            const fullTaskList = document.getElementById('fullTaskList');
+            
+            // Clear lists
+            taskList.innerHTML = '';
+            fullTaskList.innerHTML = '';
+            
+            if (tasks.length === 0) {
+                taskList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <p>¡No hay tareas pendientes!</p>
+                    </div>
+                `;
+                
+                fullTaskList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-tasks"></i>
+                        <p>Comienza añadiendo tu primera tarea</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Filter pending tasks for dashboard
+            const pendingTasks = tasks.filter(task => !task.completed);
+            
+            if (pendingTasks.length === 0) {
+                taskList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <p>¡Todas las tareas completadas!</p>
+                    </div>
+                `;
+            } else {
+                pendingTasks.slice(0, 5).forEach(task => {
+                    const taskElement = createTaskElement(task);
+                    taskList.appendChild(taskElement);
+                });
+            }
+            
+            // Render all tasks in tasks view
+            tasks.forEach(task => {
+                const taskElement = createTaskElement(task);
+                fullTaskList.appendChild(taskElement);
+            });
+        }
+        
+        // Create task element
+        function createTaskElement(task) {
+            const taskElement = document.createElement('li');
+            taskElement.className = `task-item ${task.completed ? 'completed' : ''}`;
+            taskElement.innerHTML = `
+                <div class="task-check">
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} 
+                           onchange="toggleTaskCompletion(${task.id})">
+                </div>
+                <div class="task-content">
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-description">Creada: ${new Date(task.createdAt).toLocaleDateString()}</div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            return taskElement;
+        }
+        
+        // Render notes
+        function renderNotes() {
+            const noteList = document.getElementById('noteList');
+            const fullNoteList = document.getElementById('fullNoteList');
+            
+            // Clear lists
+            noteList.innerHTML = '';
+            fullNoteList.innerHTML = '';
+            
+            if (notes.length === 0) {
+                noteList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-sticky-note"></i>
+                        <p>Aún no hay notas</p>
+                    </div>
+                `;
+                
+                fullNoteList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-sticky-note"></i>
+                        <p>Comienza añadiendo tu primera nota</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Render recent notes in dashboard
+            notes.slice(0, 3).reverse().forEach(note => {
+                const noteElement = createNoteElement(note);
+                noteList.appendChild(noteElement);
+            });
+            
+            // Render all notes in notes view
+            notes.slice().reverse().forEach(note => {
+                const noteElement = createNoteElement(note);
+                fullNoteList.appendChild(noteElement);
+            });
+        }
+        
+        // Create note element
+        function createNoteElement(note) {
+            const noteElement = document.createElement('li');
+            noteElement.className = 'note-item';
+            noteElement.innerHTML = `
+                <div class="note-content">
+                    ${note.content.replace(/\n/g, '<br>')}
+                    <div class="task-description" style="margin-top: 10px;">
+                        Creada: ${new Date(note.createdAt).toLocaleDateString()}
+                    </div>
+                </div>
+                <div class="note-actions">
+                    <button class="btn btn-sm btn-danger" onclick="deleteNote(${note.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            return noteElement;
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const totalTasks = tasks.length;
+            const pendingTasks = tasks.filter(task => !task.completed).length;
+            const completedTasks = tasks.filter(task => task.completed).length;
+            const totalNotes = notes.length;
+            
+            document.getElementById('totalTasks').textContent = totalTasks;
+            document.getElementById('pendingTasks').textContent = pendingTasks;
+            document.getElementById('completedTasks').textContent = completedTasks;
+            document.getElementById('totalNotes').textContent = totalNotes;
+        }
+    </script>
+</body>
+</html>
